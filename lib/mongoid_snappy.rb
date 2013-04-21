@@ -71,3 +71,22 @@ module Mongoid
     end
   end
 end
+
+if Object.const_defined?("RailsAdmin")
+  require 'rails_admin/adapters/mongoid'
+
+  module RailsAdmin
+    module Adapters
+      module Mongoid
+        alias_method :type_lookup_without_mongoid_snappy, :type_lookup
+        def type_lookup(name, field)
+          if field.type.to_s == 'Mongoid::Snappy'
+            { :type => :text }
+          else
+            type_lookup_without_mongoid_snappy(name, field)
+          end
+        end
+      end
+    end
+  end
+end
