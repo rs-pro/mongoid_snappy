@@ -5,6 +5,8 @@ require 'snappy'
 
 module Mongoid
   class Snappy
+    instance_methods.each { |m| undef_method m unless m =~ /(^__|^send$|^object_id$)/ }
+
     def initialize(data)
       @data = data
     end
@@ -33,6 +35,12 @@ module Mongoid
 
     def mongoize
       Moped::BSON::Binary.new(:generic, ::Snappy.deflate(@data))
+    end
+
+    protected
+
+    def method_missing(name, *args, &block)
+      @data.send(name, *args, &block)
     end
 
     class << self
@@ -74,19 +82,39 @@ end
 
 if Object.const_defined?("RailsAdmin")
   require 'rails_admin/adapters/mongoid'
-
+  require 'rails_admin/config/fields/types/text'
   module RailsAdmin
     module Adapters
       module Mongoid
         alias_method :type_lookup_without_mongoid_snappy, :type_lookup
         def type_lookup(name, field)
           if field.type.to_s == 'Mongoid::Snappy'
-            { :type => :text }
+            { :type => :mongoid_snappy }
           else
             type_lookup_without_mongoid_snappy(name, field)
           end
         end
       end
     end
+
+    module Config
+      module Fields
+        module Types
+          class MongoidSnappy < RailsAdmin::Config::Fields::Types::Text
+            # Register field type for the type loader
+            RailsAdmin::Config::Fields::Types::register(self)
+
+            register_instance_option :formatted_value do
+              if value.respond_to?(:data)
+                ::Snappy.inflate(value.data)
+              else
+                value
+              end
+            end
+          end
+        end
+      end
+    end
   end
+
 end
