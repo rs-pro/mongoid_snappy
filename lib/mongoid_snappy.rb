@@ -8,7 +8,7 @@ module Mongoid
     instance_methods.each { |m| undef_method m unless m =~ /(^__|^send$|^object_id$)/ }
 
     def initialize(data)
-      @data = data
+      @data = data.force_encoding('UTF-8')
     end
 
     def to_s
@@ -104,9 +104,17 @@ if Object.const_defined?("RailsAdmin")
             # Register field type for the type loader
             RailsAdmin::Config::Fields::Types::register(self)
 
+            register_instance_option :pretty_value do
+              if value.respond_to?(:data)
+                ::Snappy.inflate(value.data).force_encoding('UTF-8')
+              else
+                value
+              end
+            end
+
             register_instance_option :formatted_value do
               if value.respond_to?(:data)
-                ::Snappy.inflate(value.data)
+                ::Snappy.inflate(value.data).force_encoding('UTF-8')
               else
                 value
               end
