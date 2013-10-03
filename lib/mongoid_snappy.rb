@@ -37,7 +37,7 @@ module Mongoid
       if defined?(Moped::BSON)
         Moped::BSON::Binary.new(:generic, ::Snappy.deflate(@data))
       else
-        BSON::Binary.new(:generic, ::Snappy.deflate(@data))
+        BSON::Binary.new(::Snappy.deflate(@data), :generic)
       end
     end
 
