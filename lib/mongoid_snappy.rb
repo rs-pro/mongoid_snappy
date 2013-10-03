@@ -34,7 +34,11 @@ module Mongoid
     end
 
     def mongoize
-      Moped::BSON::Binary.new(:generic, ::Snappy.deflate(@data))
+      if defined?(Moped::BSON)
+        Moped::BSON::Binary.new(:generic, ::Snappy.deflate(@data))
+      else
+        BSON::Binary.new(:generic, ::Snappy.deflate(@data))
+      end
     end
 
     protected
