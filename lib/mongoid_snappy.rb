@@ -48,7 +48,9 @@ module Mongoid
       # Get the object as it was stored in the database, and instantiate
       # this custom class from it.
       def demongoize(object)
-        if object.is_a?(Moped::BSON::Binary)
+        if defined?(Moped::BSON) && object.is_a?(Moped::BSON::Binary)
+          Mongoid::Snappy.new(::Snappy.inflate(object.data))
+        elsif defined?(BSON) && object.is_a?(BSON::Binary)
           Mongoid::Snappy.new(::Snappy.inflate(object.data))
         elsif object.is_a?(String)
           Mongoid::Snappy.new(object)
