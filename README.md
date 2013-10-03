@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rs-pro/mongoid_snappy.png?branch=master)](https://travis-ci.org/rs-pro/mongoid_snappy)
+
 # MongoidSnappy
 
 Allow string attributes in Mongoid to be compressed with Snappy
