@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/rs-pro/mongoid_snappy.png?branch=master)](https://travis-ci.org/rs-pro/mongoid_snappy)
+[![Gem Version](https://badge.fury.io/rb/mongoid_snappy.png)](http://badge.fury.io/rb/mongoid_snappy)
+
 
 # MongoidSnappy
 
