@@ -9,11 +9,11 @@ module RailsAdmin
     module Mongoid
       class Property
         alias_method :type_without_mongoid_snappy, :type
-        def type(name, field)
-          if field.type.to_s == 'Mongoid::Snappy'
-            { :type => :mongoid_snappy }
+        def type
+          if property.type.to_s == 'Mongoid::Snappy'
+            :mongoid_snappy
           else
-            type_without_mongoid_snappy(name, field)
+            type_without_mongoid_snappy
           end
         end
       end
