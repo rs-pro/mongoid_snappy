@@ -21,6 +21,7 @@ module RailsAdmin
   end
 end
 
+require 'rails_admin/config/fields/types/text'
 module RailsAdmin
   module Config
     module Fields
